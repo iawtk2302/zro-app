@@ -1,0 +1,36 @@
+name: Flutter Fastlane Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: macos-latest # Sử dụng macOS để build cả iOS và Android.
+
+    steps:
+      # 1. Checkout code từ repository.
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Thiết lập Flutter environment.
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: stable # Cài đặt Flutter phiên bản stable.
+
+      # 3. Cài đặt Fastlane.
+      - name: Install Fastlane
+        run: |
+          sudo gem install fastlane
+
+      # 4. Cài đặt dependencies (pub get).
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 5. Build và deploy cho Android.
+      - name: Deploy Android
+        steps:
+          - run: cd android
+          - run: fastlane beta
