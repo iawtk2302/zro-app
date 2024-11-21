@@ -25,9 +25,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Give execute permission to gradlew
-        run: chmod +x android/gradlew
-
       # Step 4: Set up Ruby and Fastlane
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
