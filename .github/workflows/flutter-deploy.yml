@@ -14,16 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
       # 2. Thiết lập Flutter environment.
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: stable # Cài đặt Flutter phiên bản stable.
+          flutter-version: 3.24.4
 
       # 3. Cài đặt Fastlane.
       - name: Install Fastlane
