@@ -22,7 +22,7 @@ jobs:
 
       # 3. Grant execute permission for Gradle Wrapper
       - name: Grant execute permission for Gradle Wrapper
-        run: chmod +x android/gradlew
+        run: chmod +x android/gradle
 
       # 4. Install dependencies (pub get).
       - name: Install dependencies
