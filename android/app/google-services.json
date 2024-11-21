@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "112014338175",
+    "project_id": "zro-app",
+    "storage_bucket": "zro-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112014338175:android:edc0f914863150dfb7774a",
+        "android_client_info": {
+          "package_name": "com.example.zro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOiLQ6pwcwwVWAmhBy_Mpcm45zH7tR4kI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
