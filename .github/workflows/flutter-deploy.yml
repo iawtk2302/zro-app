@@ -3,7 +3,7 @@ name: Build and Distribute Android with Fastlane and Firebase
 on:
   push:
     branches:
-      - main # Hoặc nhánh bạn muốn trigger workflow
+      - master # Hoặc nhánh bạn muốn trigger workflow
 
 jobs:
   build:
