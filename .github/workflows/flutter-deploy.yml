@@ -23,7 +23,10 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
+          cd android
+          bundle install
 
       # Step 4: Set up Ruby and Fastlane
       - name: Set up Ruby
