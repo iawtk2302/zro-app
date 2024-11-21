@@ -1,0 +1,22 @@
+default_platform(:android)
+
+platform :android do
+
+  lane :beta do
+    gradle(
+        task: "clean"
+    )
+    
+    gradle(
+        task: "assemble",
+        build_type: "Release"
+    )
+  
+    firebase_app_distribution(
+        app: "1:112014338175:android:edc0f914863150dfb7774a",
+        firebase_cli_token: "1//0g4DAd7-MvJGuCgYIARAAGBASNwF-L9IrdBMl8svtsWLwoMTVYbxiS19CkrcdPJ90eswXY-TR5El_-ELkAWLURjWJkCcht1hJSD8",
+        apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
+        groups: "testers"
+    )
+  end  
+end
