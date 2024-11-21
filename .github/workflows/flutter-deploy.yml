@@ -1,41 +1,41 @@
-name: Flutter Fastlane Deploy
+name: Build and Distribute Android with Fastlane and Firebase
 
 on:
   push:
     branches:
-      - master
+      - main # Hoặc nhánh bạn muốn trigger workflow
 
 jobs:
-  deploy:
-    runs-on: macos-latest # Sử dụng macOS để build cả iOS và Android.
+  build:
+    name: Build and Distribute Android
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code từ repository.
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Thiết lập Flutter environment.
+      # Step 2: Set up Flutter
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.24.4
+          flutter-version: 3.24.4 # Hoặc phiên bản cụ thể của Flutter nếu cần
 
-      # 3. Grant execute permission for Gradle Wrapper
-      - name: Grant execute permission for Gradle Wrapper
-        run: chmod +x android/gradle
-
-      # 4. Install dependencies (pub get).
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. Install bundle for Fastlane
-      - name: Install Fastlane dependencies
-        run: bundle install --path vendor/bundle
-        working-directory: android
-
-      # 6. Run Fastlane
-      - name: Run Fastlane
-        uses: maierj/fastlane-action@v3.0.0
+      # Step 4: Set up Ruby and Fastlane
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          lane: "beta"
-          subdirectory: android
+          ruby-version: "3.0" # Phiên bản Ruby phù hợp với Fastlane
+
+      - name: Install Fastlane
+        run: |
+          gem install bundler
+          bundle install --path vendor/bundle
+
+      # Step 5: Build và Distribute app qua Firebase
+      - name: Run Fastlane for Android
+        run: bundle exec fastlane beta
