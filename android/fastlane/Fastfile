@@ -3,14 +3,6 @@ default_platform(:android)
 platform :android do
 
   lane :beta do
-    gradle(
-        task: "clean"
-    )
-    
-    gradle(
-        task: "assemble",
-        build_type: "Release"
-    )
   
     firebase_app_distribution(
         app: "1:112014338175:android:edc0f914863150dfb7774a",
