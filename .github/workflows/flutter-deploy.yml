@@ -35,7 +35,9 @@ jobs:
         run: |
           gem install bundler
           bundle install --path vendor/bundle
+        working-directory: android
 
       # Step 5: Build và Distribute app qua Firebase
       - name: Run Fastlane for Android
         run: bundle exec fastlane beta
+        subdirectory: android
