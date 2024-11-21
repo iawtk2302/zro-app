@@ -20,16 +20,21 @@ jobs:
         with:
           flutter-version: 3.24.4
 
-      - name: bundle install before run fastlane
-        run: bundle install --path vendor/bundle
-        working-directory: android
+      # 3. Grant execute permission for Gradle Wrapper
+      - name: Grant execute permission for Gradle Wrapper
+        run: chmod +x android/gradlew
 
-      # 4. Cài đặt dependencies (pub get).
+      # 4. Install dependencies (pub get).
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. Build và deploy cho Android.
-      - name: Run fastlane
+      # 5. Install bundle for Fastlane
+      - name: Install Fastlane dependencies
+        run: bundle install --path vendor/bundle
+        working-directory: android
+
+      # 6. Run Fastlane
+      - name: Run Fastlane
         uses: maierj/fastlane-action@v3.0.0
         with:
           lane: "beta"
