@@ -40,4 +40,3 @@ jobs:
       # Step 5: Build và Distribute app qua Firebase
       - name: Run Fastlane for Android
         run: bundle exec fastlane beta
-        subdirectory: android
