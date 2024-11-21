@@ -20,17 +20,17 @@ jobs:
         with:
           flutter-version: 3.24.4
 
-      # 3. Cài đặt Fastlane.
-      - name: Install Fastlane
-        run: |
-          sudo gem install fastlane
+      - name: bundle install before run fastlane
+        run: bundle install --path vendor/bundle
+        working-directory: android
 
       # 4. Cài đặt dependencies (pub get).
       - name: Install dependencies
         run: flutter pub get
 
       # 5. Build và deploy cho Android.
-      - name: Deploy Android
-        run: |
-          cd android
-          fastlane beta
+      - name: Run fastlane
+        uses: maierj/fastlane-action@v3.0.0
+        with:
+          lane: "beta"
+          subdirectory: android
