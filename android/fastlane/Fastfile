@@ -31,6 +31,12 @@ platform :android do
     # Cập nhật versionCode và versionName
     set_version
 
+    # Đọc giá trị versionCode từ file build.gradle
+    version_code = File.read("..android/app/build.gradle")[/versionCode\s+(\d+)/, 1]
+
+    # Tạo release notes từ versionCode (hoặc bạn có thể tạo release notes theo cách khác nếu muốn)
+    release_notes = "Release for version code: #{version_code}"
+
     # Build APK
     sh "flutter build apk --release"
 
@@ -40,7 +46,7 @@ platform :android do
       service_credentials_json_data: ENV["FIREBASE_CREDENTIALS_JSON"],
       apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       groups: "testers",
-      release_notes: "Build #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
+      release_notes: release_notes
     )
   end
 end
