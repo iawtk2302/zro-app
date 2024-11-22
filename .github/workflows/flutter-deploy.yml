@@ -19,24 +19,19 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.24.4 # Hoặc phiên bản cụ thể của Flutter nếu cần
-
-      - name: Install Ruby and Bundler
-        run: |
-          sudo apt-get install ruby-full # Cài đặt Ruby
-          gem install bundler --user-install
+          flutter-version: '3.24.4' # Hoặc phiên bản cụ thể của Flutter nếu cần
 
       # Step 3: Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      - name: bundle install before run fastlane
-        run: bundle install --path vendor/bundle
-        working-directory: android
-
       # Step 5: Build và Distribute app qua Firebase
       - name: Build and Distribute Android
-        uses: maierj/fastlane-action@v3.0.0
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+        uses: maierj/fastlane-action@v3.1.0
         with:
           lane: "beta"
-          subdirectory: android
+          subdirectory: "android"
