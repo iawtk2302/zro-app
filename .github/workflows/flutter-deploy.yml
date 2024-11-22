@@ -39,11 +39,6 @@ jobs:
           ruby-version: "3.0"
           bundler-cache: true
 
-      - name: Set environment variables
-        run: |
-          echo "FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> $GITHUB_ENV
-          echo "FIREBASE_CREDENTIALS_JSON=${{ secrets.FIREBASE_CREDENTIALS_JSON }}" >> $GITHUB_ENV
-
       - name: Install Fastlane
         run: gem install fastlane
 
@@ -75,3 +70,6 @@ jobs:
         with:
           lane: "beta"
           subdirectory: "android"
+        env:
+          FIREBASE_CREDENTIALS_JSON: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
