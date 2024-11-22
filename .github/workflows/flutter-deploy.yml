@@ -56,4 +56,4 @@ jobs:
       # Step 8: Distribute to Firebase
       - name: Distribute Android to Firebase
         run: fastlane beta
-        working-directory: android
+        working-directory: ./android/fastlane
