@@ -41,7 +41,6 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
-          working-directory: "android"
 
       # Step 6: Install Fastlane and Firebase CLI
       - name: Install Fastlane and Firebase CLI
@@ -49,20 +48,34 @@ jobs:
           gem install fastlane --user-install
           curl -sL https://firebase.tools | bash
 
-      - name: Install Fastlane Plugins
-        run: bundle install
-        working-directory: android/fastlane
+      # - name: Disable frozen mode
+      #   run: bundle config set frozen false
 
-      - name: Disable frozen mode
-        run: bundle config set frozen false
+      # - name: Install Fastlane Plugins
+      #   run: bundle install
+      #   working-directory: android/fastlane
 
       # Step 7: Build APK
-      - name: Build APK
-        run: flutter build apk --release
+      # - name: Build APK
+      #   run: flutter build apk --release
 
-      # Step 8: Distribute to Firebase
-      - name: Distribute Android to Firebase
-        uses: maierj/fastlane-action@v3.1.0
+      - run: flutter build apk
+        uses: actions/upload-artifact@v1
         with:
-          lane: "beta"
-          subdirectory: "android"
+          name: release-apk
+          path: build/app/outputs/apk/release/app-release.apk
+
+      # # Step 8: Distribute to Firebase
+      # - name: Distribute Android to Firebase
+      #   uses: maierj/fastlane-action@v3.1.0
+      #   with:
+      #     lane: "beta"
+      #     subdirectory: "android"
+
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: "1:112014338175:android:edc0f914863150dfb7774a"
+          token: "1//0g4DAd7-MvJGuCgYIARAAGBASNwF-L9IrdBMl8svtsWLwoMTVYbxiS19CkrcdPJ90eswXY-TR5El_-ELkAWLURjWJkCcht1hJSD8"
+          groups: testers
+          file: build/app/outputs/flutter-apk/app.apk
