@@ -52,8 +52,8 @@ jobs:
         run: fastlane add_plugin firebase_app_distribution
 
       # Step 7: Build APK
-      # - name: Build APK
-      #   run: flutter build apk --release
+      - name: Build APK
+        run: flutter build apk --release
 
       # # Step 8: Distribute to Firebase
       # - name: Distribute Android to Firebase
