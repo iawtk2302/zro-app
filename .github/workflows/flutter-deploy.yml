@@ -19,20 +19,30 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.4' # Hoặc phiên bản cụ thể của Flutter nếu cần
+          flutter-version: "3.24.4" # Hoặc phiên bản cụ thể của Flutter nếu cần
 
       # Step 3: Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # Step 5: Build và Distribute app qua Firebase
-      - name: Build and Distribute Android
+      # Step 4: Set up Ruby environment
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'
+          ruby-version: "3.0"
           bundler-cache: true
-          
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-          lane: "beta"
-          subdirectory: "android"
+
+      # Step 5: Install Fastlane and Firebase CLI
+      - name: Install Fastlane and Firebase CLI
+        run: |
+          gem install fastlane --user-install
+          curl -sL https://firebase.tools | bash
+
+      # Step 6: Build APK
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Step 7: Distribute to Firebase
+      - name: Distribute Android to Firebase
+        run: fastlane beta
+        working-directory: android
