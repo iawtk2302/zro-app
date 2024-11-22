@@ -21,8 +21,8 @@ jobs:
         with:
           flutter-version: "3.24.4" # Hoặc phiên bản cụ thể của Flutter nếu cần
 
-      - name: Install dependencies
-      - run: fvm flutter clean
+      - name: Clean
+        run: fvm flutter clean
 
       # Step 3: Install dependencies
       - name: Install dependencies
