@@ -6,8 +6,8 @@ on:
       - master # Hoặc nhánh bạn muốn trigger workflow
 
 jobs:
-  build:
-    name: Build and Distribute Android
+  build-and-distribute:
+    name: Build and Distribute with Fastlane
     runs-on: ubuntu-latest
 
     steps:
@@ -21,27 +21,14 @@ jobs:
         with:
           flutter-version: 3.24.4 # Hoặc phiên bản cụ thể của Flutter nếu cần
 
+      - name: Install Fastlane
+        run: sudo gem install fastlane -NV
+
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: |
-          flutter pub get
-          cd android
-          bundle install
-
-      # Step 4: Set up Ruby and Fastlane
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0" # Phiên bản Ruby phù hợp với Fastlane
-
-      - name: Install Fastlane
-        run: |
-          gem install bundler
-          cd android
-          bundle install --path vendor/bundle
+        run: flutter pub get
 
       # Step 5: Build và Distribute app qua Firebase
-      - name: Run Fastlane for Android
-        run: |
-          cd android
-          bundle exec fastlane beta
+      - name: Build and Distribute Android
+        working-directory: android
+        run: fastlane beta
