@@ -32,20 +32,6 @@ jobs:
           java-version: "17" # Cài đặt Java 17
           distribution: "oracle"
 
-      # Step 5: Set up Ruby
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0"
-          bundler-cache: true
-
-      - name: Install Fastlane
-        run: gem install fastlane
-
-      - name: Install Fastlane Firebase App Distribution plugin
-        working-directory: android
-        run: fastlane add_plugin firebase_app_distribution
-
       # Step 7: Build APK
       - name: Build APK
         run: flutter build apk --release
