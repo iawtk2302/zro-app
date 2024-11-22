@@ -22,7 +22,9 @@ jobs:
           flutter-version: 3.24.4 # Hoặc phiên bản cụ thể của Flutter nếu cần
 
       - name: Install Fastlane
-        run: sudo gem install fastlane -NV
+        run: |
+          sudo gem install fastlane -NV
+          fastlane install_plugins
 
       # Step 3: Install dependencies
       - name: Install dependencies
