@@ -21,6 +21,9 @@ jobs:
         with:
           flutter-version: "3.24.4" # Hoặc phiên bản cụ thể của Flutter nếu cần
 
+      - name: Install dependencies
+      - run: fvm flutter clean
+
       # Step 3: Install dependencies
       - name: Install dependencies
         run: flutter pub get
@@ -38,6 +41,7 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
+          working-directory: "android"
 
       # Step 6: Install Fastlane and Firebase CLI
       - name: Install Fastlane and Firebase CLI
