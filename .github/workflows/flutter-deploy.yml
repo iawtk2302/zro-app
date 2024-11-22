@@ -36,17 +36,17 @@ jobs:
           distribution: "oracle"
 
       # Step 5: Set up Ruby
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0"
-          bundler-cache: true
+      # - name: Set up Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: "3.0"
+      #     bundler-cache: true
 
       # Step 6: Install Fastlane and Firebase CLI
-      - name: Install Fastlane and Firebase CLI
-        run: |
-          gem install fastlane --user-install
-          curl -sL https://firebase.tools | bash
+      # - name: Install Fastlane and Firebase CLI
+      #   run: |
+      #     gem install fastlane --user-install
+      #     curl -sL https://firebase.tools | bash
 
       # - name: Disable frozen mode
       #   run: bundle config set frozen false
