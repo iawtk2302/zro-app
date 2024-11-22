@@ -71,5 +71,8 @@ jobs:
       #     file: build/app/outputs/flutter-apk/app-release.apk
 
       - name: Run Fastlane for Android
-        working-directory: android
-        run: fastlane beta
+        uses: maierj/fastlane-action@v3.1.0
+          with:
+          lane: 'beta'
+          subdirectory: 'android'
+    
