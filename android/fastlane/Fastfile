@@ -37,7 +37,7 @@ platform :android do
     # Phân phối đến Firebase App Distribution
     firebase_app_distribution(
       app: ENV["FIREBASE_APP_ID"],
-      serviceCredentialsFileContent: ENV["FIREBASE_CREDENTIALS_JSON"],
+      service_credentials_json_data: ENV["FIREBASE_CREDENTIALS_JSON"],
       apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       groups: "testers",
       release_notes: "Build #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
