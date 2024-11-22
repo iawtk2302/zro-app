@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: "17" # Cài đặt Java 17
-          distribution: "adoptium"
+          distribution: "oracle"
 
       # Step 5: Set up Ruby
       - name: Set up Ruby
