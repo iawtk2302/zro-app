@@ -32,7 +32,7 @@ platform :android do
     set_version
 
     # Đọc giá trị versionCode từ file build.gradle
-    version_code = File.read("..android/app/build.gradle")[/versionCode\s+(\d+)/, 1]
+    version_code = File.read("..app/build.gradle")[/versionCode\s+(\d+)/, 1]
 
     # Tạo release notes từ versionCode (hoặc bạn có thể tạo release notes theo cách khác nếu muốn)
     release_notes = "Release for version code: #{version_code}"
