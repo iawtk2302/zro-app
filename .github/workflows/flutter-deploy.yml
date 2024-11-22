@@ -21,9 +21,6 @@ jobs:
         with:
           flutter-version: "3.24.4" # Hoặc phiên bản cụ thể của Flutter nếu cần
 
-      - name: Clean
-        run: flutter clean
-
       # Step 3: Install dependencies
       - name: Install dependencies
         run: flutter pub get
@@ -36,28 +33,22 @@ jobs:
           distribution: "oracle"
 
       # Step 5: Set up Ruby
-      # - name: Set up Ruby
-      #   uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: "3.0"
-      #     bundler-cache: true
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
 
-      # Step 6: Install Fastlane and Firebase CLI
-      # - name: Install Fastlane and Firebase CLI
-      #   run: |
-      #     gem install fastlane --user-install
-      #     curl -sL https://firebase.tools | bash
+      - name: Install Fastlane
+        run: gem install fastlane
 
-      # - name: Disable frozen mode
-      #   run: bundle config set frozen false
-
-      # - name: Install Fastlane Plugins
-      #   run: bundle install
-      #   working-directory: android/fastlane
+      - name: Install Fastlane Firebase App Distribution plugin
+        working-directory: android
+        run: fastlane add_plugin firebase_app_distribution
 
       # Step 7: Build APK
-      - name: Build APK
-        run: flutter build apk --release
+      # - name: Build APK
+      #   run: flutter build apk --release
 
       # # Step 8: Distribute to Firebase
       # - name: Distribute Android to Firebase
@@ -66,10 +57,14 @@ jobs:
       #     lane: "beta"
       #     subdirectory: "android"
 
-      - name: upload artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: testers
-          file: build/app/outputs/flutter-apk/app-release.apk
+      # - name: upload artifact to Firebase App Distribution
+      #   uses: wzieba/Firebase-Distribution-Github-Action@v1
+      #   with:
+      #     appId: ${{secrets.FIREBASE_APP_ID}}
+      #     serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+      #     groups: testers
+      #     file: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Run Fastlane for Android
+        working-directory: android
+        run: fastlane beta
