@@ -1,14 +1,58 @@
 default_platform(:android)
 
 platform :android do
+  # Lane để cập nhật versionCode và versionName trong build.gradle
+  lane :set_version do
+    # Lấy ngày hiện tại (YYMMDD)
+    build_date = Time.now.strftime("%y%m%d")
+    # Lấy số lần build từ ENV hoặc mặc định là 1
+    build_count = ENV['BUILD_COUNT'] || 1
 
-  lane :beta do
-    firebase_app_distribution(
-        app: ENV["FIREBASE_APP_ID"], # Lấy App ID từ secret
-        service_credentials_json_data: ENV["FIREBASE_CREDENTIALS_JSON"], # JSON credentials từ secret
-        apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
-        groups: "testers"
+    # Tạo versionCode và versionName
+    version_code = "#{build_date}#{build_count.to_s.rjust(2, '0')}" # Ex: 23112201
+    version_name = "1.0.#{build_count}" # Ex: 1.0.1
+
+    # Đường dẫn tới file build.gradle
+    gradle_file = "./android/app/build.gradle"
+
+    # Log thông tin
+    UI.message("Updating versionCode to #{version_code} and versionName to #{version_name}")
+
+    # Hàm cập nhật versionCode và versionName
+    update_android_version_name_and_code(
+      gradle_file_path: gradle_file,
+      version_name: version_name,
+      version_code: version_code
     )
-  end  
+  end
+
+  # Lane để build và phân phối app
+  lane :beta do
+    # Cập nhật versionCode và versionName
+    set_version
+
+    # Build APK
+    sh "flutter build apk --release"
+
+    # Phân phối đến Firebase App Distribution
+    firebase_app_distribution(
+      app: ENV["FIREBASE_APP_ID"],
+      serviceCredentialsFileContent: ENV["FIREBASE_CREDENTIALS_JSON"],
+      apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
+      groups: "testers",
+      release_notes: "Build #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+  end
 end
 
+# Hàm để cập nhật versionCode và versionName trong build.gradle
+def update_android_version_name_and_code(gradle_file_path:, version_name:, version_code:)
+  gradle_content = File.read(gradle_file_path)
+
+  # Thay đổi versionCode
+  gradle_content.gsub!(/versionCode\s+\d+/, "versionCode #{version_code}")
+  # Thay đổi versionName
+  gradle_content.gsub!(/versionName\s+"[\d.]+"/, "versionName \"#{version_name}\"")
+
+  File.write(gradle_file_path, gradle_content)
+end
