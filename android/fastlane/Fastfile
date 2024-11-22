@@ -4,8 +4,8 @@ platform :android do
 
   lane :beta do
     firebase_app_distribution(
-        app: ${{secrets.FIREBASE_APP_ID}},
-        serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }},
+        app: ENV["FIREBASE_APP_ID"], # Lấy App ID từ secret
+        service_credentials_file_content: ENV["FIREBASE_CREDENTIALS_JSON"], # JSON credentials từ secret
         apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
         groups: "testers"
     )
