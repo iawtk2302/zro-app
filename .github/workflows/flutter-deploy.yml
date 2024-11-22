@@ -45,6 +45,10 @@ jobs:
           gem install fastlane --user-install
           curl -sL https://firebase.tools | bash
 
+      - name: Install Fastlane Plugins
+        run: bundle install
+        working-directory: android/fastlane
+
       # Step 7: Build APK
       - name: Build APK
         run: flutter build apk --release
