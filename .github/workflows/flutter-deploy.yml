@@ -23,8 +23,8 @@ jobs:
 
       - name: Install Ruby and Bundler
         run: |
-          sudo apt-get install ruby-full # Cài đặt Ruby nếu chưa có
-          gem install bundler
+          sudo apt-get install ruby-full # Cài đặt Ruby
+          gem install bundler --user-install
 
       # Step 3: Install dependencies
       - name: Install dependencies
