@@ -53,6 +53,9 @@ jobs:
         run: bundle install
         working-directory: android/fastlane
 
+      - name: Disable frozen mode
+        run: bundle config set frozen false
+
       # Step 7: Build APK
       - name: Build APK
         run: flutter build apk --release
