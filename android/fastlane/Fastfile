@@ -24,19 +24,27 @@ platform :android do
   # Lane để build và phân phối app
   lane :beta do
     # Lấy thời gian hiện tại
-    current_time = Time.now
-
-    # Tạo versionCode: YYMMDD + số lần build trong ngày
-    # Số lần build trong ngày sẽ được đọc từ file hoặc reset nếu chưa có file
+    current_date = current_time.strftime("%Y%m%d")
     build_number_file = "build_number.txt"
     build_number_today = 1
- 
-    if File.exist?(build_number_file)
+
+    # Nếu file không tồn tại, tạo mới với giá trị mặc định
+    if !File.exist?(build_number_file)
+      puts "File not found. Creating new file."
+      File.write(build_number_file, "#{current_date} #{build_number_today}")
+    else
       saved_date, saved_build_number = File.read(build_number_file).split
-      if saved_date == current_time.strftime("%Y%m%d")
+      if saved_date == current_date
         build_number_today = saved_build_number.to_i + 1
+        puts "Updated build number: #{build_number_today}" # Log thông báo số lần build mới
+      else
+        puts "New day detected. Resetting build number."
+        build_number_today = 1 # Reset số lần build nếu ngày thay đổi
       end
     end
+
+    # Ghi lại số lần build mới vào file
+    File.write(build_number_file, "#{current_date} #{build_number_today}")
  
     # Ghi lại số lần build mới
     File.write(build_number_file, "#{current_time.strftime("%Y%m%d")} #{build_number_today}")
@@ -64,6 +72,6 @@ platform :android do
       apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       groups: "testers",
       release_notes: release_notes
-    )
+      )
   end
 end
