@@ -41,8 +41,8 @@ platform :android do
     # Ghi lại số lần build mới
     File.write(build_number_file, "#{current_time.strftime("%Y%m%d")} #{build_number_today}")
  
-    version_code = "1.0.0+#{current_time.strftime("%y%m%d").to_i * 100 + build_number_today}"
-    version_name = "Release for version code: #{version_code}"
+    version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
+    version_name = "1.0.0"
 
     # Cập nhật version trong pubspec.yaml
     pubspec_path = "../../pubspec.yaml"
@@ -51,6 +51,8 @@ platform :android do
     # Cập nhật versionCode và versionName trong build.gradle
     gradle_file_path = "../app/build.gradle"
     update_gradle_file(gradle_file_path, version_code)
+
+    release_notes= "Release for version: #{version_name}+#{version_code}"
 
     # Build APK
     sh "flutter build apk --release"
