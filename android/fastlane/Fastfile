@@ -1,41 +1,33 @@
 default_platform(:android)
 
-platform :android do
-  # Lane để cập nhật versionCode và versionName trong build.gradle
-  lane :set_version do
-    # Lấy ngày hiện tại (YYMMDD)
-    build_date = Time.now.strftime("%y%m%d")
-    # Lấy số lần build từ ENV hoặc mặc định là 1
-    build_count = ENV['BUILD_COUNT'] || 1
-
-    # Tạo versionCode và versionName
-    version_code = "#{build_date}#{build_count.to_s.rjust(2, '0')}" # Ex: 23112201
-    version_name = "1.0.#{build_count}" # Ex: 1.0.1
-
-    # Đường dẫn tới file build.gradle
-    gradle_file = "../app/build.gradle"
-
-    # Log thông tin
-    UI.message("Updating versionCode to #{version_code} and versionName to #{version_name}")
-
-    # Hàm cập nhật versionCode và versionName
-    update_android_version_name_and_code(
-      gradle_file_path: gradle_file,
-      version_name: version_name,
-      version_code: version_code
-    )
-  end
-
   # Lane để build và phân phối app
   lane :beta do
-    # Cập nhật versionCode và versionName
-    set_version
+     # Lấy thời gian hiện tại
+     current_time = Time.now
 
-    # Đọc giá trị versionCode từ file build.gradle
-    version_code = File.read("../app/build.gradle")[/versionCode\s+(\d+)/, 1]
-
-    # Tạo release notes từ versionCode (hoặc bạn có thể tạo release notes theo cách khác nếu muốn)
-    release_notes = "Release for version code: #{version_code}"
+     # Tạo versionCode: YYMMDD + số lần build trong ngày
+     # Số lần build trong ngày sẽ được đọc từ file hoặc reset nếu chưa có file
+     build_number_file = "build_number.txt"
+     build_number_today = 1
+ 
+     if File.exist?(build_number_file)
+       saved_date, saved_build_number = File.read(build_number_file).split
+       if saved_date == current_time.strftime("%Y%m%d")
+         build_number_today = saved_build_number.to_i + 1
+       end
+     end
+ 
+     # Ghi lại số lần build mới
+     File.write(build_number_file, "#{current_time.strftime("%Y%m%d")} #{build_number_today}")
+ 
+     version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
+ 
+     # Cập nhật versionCode và versionName trong build.gradle
+     gradle_file_path = "android/app/build.gradle"
+     update_gradle_file(gradle_file_path, version_code)
+ 
+     new_version_name = "#{current_time.strftime('%Y.%m.%d')} (Build #{build_number_today})"
+ 
 
     # Build APK
     sh "flutter build apk --release"
@@ -46,19 +38,15 @@ platform :android do
       service_credentials_json_data: ENV["FIREBASE_CREDENTIALS_JSON"],
       apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       groups: "testers",
-      release_notes: release_notes
+      release_notes: new_version_name
     )
   end
 end
 
-# Hàm để cập nhật versionCode và versionName trong build.gradle
-def update_android_version_name_and_code(gradle_file_path:, version_name:, version_code:)
-  gradle_content = File.read(gradle_file_path)
-
-  # Thay đổi versionCode
+# Hàm cập nhật build.gradle
+def update_gradle_file(file_path, version_code)
+  gradle_content = File.read(file_path)
   gradle_content.gsub!(/versionCode\s+\d+/, "versionCode #{version_code}")
-  # Thay đổi versionName
-  gradle_content.gsub!(/versionName\s+"[\d.]+"/, "versionName \"#{version_name}\"")
-
-  File.write(gradle_file_path, gradle_content)
+  gradle_content.gsub!(/versionName\s+\".*\"/, "versionName \"#{Time.now.strftime('%Y.%m.%d')}\"")
+  File.write(file_path, gradle_content)
 end
