@@ -63,7 +63,7 @@ platform :android do
       service_credentials_json_data: ENV["FIREBASE_CREDENTIALS_JSON"],
       apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       groups: "testers",
-      release_notes: version_name
+      release_notes: release_notes
     )
   end
 end
