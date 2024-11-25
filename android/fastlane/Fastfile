@@ -2,31 +2,31 @@ default_platform(:android)
 
   # Lane để build và phân phối app
   lane :beta do
-     # Lấy thời gian hiện tại
-     current_time = Time.now
+    # Lấy thời gian hiện tại
+    current_time = Time.now
 
-     # Tạo versionCode: YYMMDD + số lần build trong ngày
-     # Số lần build trong ngày sẽ được đọc từ file hoặc reset nếu chưa có file
-     build_number_file = "build_number.txt"
-     build_number_today = 1
+    # Tạo versionCode: YYMMDD + số lần build trong ngày
+    # Số lần build trong ngày sẽ được đọc từ file hoặc reset nếu chưa có file
+    build_number_file = "build_number.txt"
+    build_number_today = 1
  
-     if File.exist?(build_number_file)
-       saved_date, saved_build_number = File.read(build_number_file).split
-       if saved_date == current_time.strftime("%Y%m%d")
-         build_number_today = saved_build_number.to_i + 1
-       end
-     end
+    if File.exist?(build_number_file)
+      saved_date, saved_build_number = File.read(build_number_file).split
+      if saved_date == current_time.strftime("%Y%m%d")
+        build_number_today = saved_build_number.to_i + 1
+      end
+    end
  
-     # Ghi lại số lần build mới
-     File.write(build_number_file, "#{current_time.strftime("%Y%m%d")} #{build_number_today}")
+    # Ghi lại số lần build mới
+    File.write(build_number_file, "#{current_time.strftime("%Y%m%d")} #{build_number_today}")
  
-     version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
+    version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
  
-     # Cập nhật versionCode và versionName trong build.gradle
-     gradle_file_path = "android/app/build.gradle"
-     update_gradle_file(gradle_file_path, version_code)
+    # Cập nhật versionCode và versionName trong build.gradle
+    gradle_file_path = "android/app/build.gradle"
+    update_gradle_file(gradle_file_path, version_code)
  
-     new_version_name = "#{current_time.strftime('%Y.%m.%d')} (Build #{build_number_today})"
+    new_version_name = "#{current_time.strftime('%Y.%m.%d')} (Build #{build_number_today})"
  
 
     # Build APK
