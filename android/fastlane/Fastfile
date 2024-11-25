@@ -29,20 +29,23 @@ platform :android do
     build_number_file = "build_number.txt"
     build_number_today = 1
 
-    # Tải cache build_number.txt từ GitHub Actions nếu có
-    cache_file = cache_get("build_number_cache")
-
-    if cache_file && cache_file.include?("#{current_date}")
-      saved_date, saved_build_number = cache_file.split
-      build_number_today = saved_build_number.to_i + 1
-      puts "Updated build number: #{build_number_today}"
+    # Đọc build_number.txt nếu file tồn tại
+    if File.exist?(build_number_file)
+      saved_date, saved_build_number = File.read(build_number_file).split
+      if saved_date == current_date
+        build_number_today = saved_build_number.to_i + 1
+        puts "Updated build number: #{build_number_today}" # Log thông báo số lần build mới
+      else
+        puts "New day detected. Resetting build number."
+        build_number_today = 1 # Reset số lần build nếu ngày thay đổi
+      end
     else
-      puts "New day detected. Resetting build number."
-      build_number_today = 1 # Reset số lần build nếu ngày thay đổi
+      puts "File not found. Creating new file."
+      File.write(build_number_file, "#{current_date} #{build_number_today}")
     end
 
-    # Ghi lại số lần build mới vào cache của GitHub Actions
-    cache_put("build_number_cache", "#{current_date} #{build_number_today}")
+    # Ghi lại số lần build mới vào file
+    File.write(build_number_file, "#{current_date} #{build_number_today}")
 
     # Cập nhật versionCode
     version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
