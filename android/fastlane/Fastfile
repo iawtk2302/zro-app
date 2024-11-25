@@ -43,12 +43,9 @@ platform :android do
         build_number_today = 1 # Reset số lần build nếu ngày thay đổi
       end
     end
-
-    # Ghi lại số lần build mới vào file
+    
+    # Ghi lại số lần build mới vào file chỉ một lần
     File.write(build_number_file, "#{current_date} #{build_number_today}")
- 
-    # Ghi lại số lần build mới
-    File.write(build_number_file, "#{current_time.strftime("%Y%m%d")} #{build_number_today}")
  
     version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
     version_name = "1.0.0"
