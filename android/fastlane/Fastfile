@@ -24,6 +24,7 @@ platform :android do
   # Lane để build và phân phối app
   lane :beta do
     # Lấy thời gian hiện tại
+    current_time = Time.now
     current_date = current_time.strftime("%Y%m%d")
     build_number_file = "build_number.txt"
     build_number_today = 1
