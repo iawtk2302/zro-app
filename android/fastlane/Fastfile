@@ -32,7 +32,7 @@ platform :android do
     version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
  
     # Cập nhật versionCode và versionName trong build.gradle
-    gradle_file_path = "android/app/build.gradle"
+    gradle_file_path = "../app/build.gradle"
     update_gradle_file(gradle_file_path, version_code)
  
     new_version_name = "#{current_time.strftime("%Y.%m.%d")} (Build #{build_number_today})"
