@@ -14,7 +14,7 @@ def update_pubspec_file(file_path, version_name, version_code)
   # Tìm và cập nhật dòng chứa `version:`
   updated_content = content.gsub(
     /^version: .*/,
-    "version: #{version_name}+#{version_code}" # Ví dụ: "1.0.0+123"
+    "version: #{version_name}+#{version_code}" 
   )
 
   File.write(file_path, updated_content)
@@ -29,36 +29,34 @@ platform :android do
     build_number_file = "build_number.txt"
     build_number_today = 1
 
-    # Nếu file không tồn tại, tạo mới với giá trị mặc định
-    if !File.exist?(build_number_file)
-      puts "File not found. Creating new file."
-      File.write(build_number_file, "#{current_date} #{build_number_today}")
+    # Tải cache build_number.txt từ GitHub Actions nếu có
+    cache_file = cache_get("build_number_cache")
+
+    if cache_file && cache_file.include?("#{current_date}")
+      saved_date, saved_build_number = cache_file.split
+      build_number_today = saved_build_number.to_i + 1
+      puts "Updated build number: #{build_number_today}"
     else
-      saved_date, saved_build_number = File.read(build_number_file).split
-      if saved_date == current_date
-        build_number_today = saved_build_number.to_i + 1
-        puts "Updated build number: #{build_number_today}" # Log thông báo số lần build mới
-      else
-        puts "New day detected. Resetting build number."
-        build_number_today = 1 # Reset số lần build nếu ngày thay đổi
-      end
+      puts "New day detected. Resetting build number."
+      build_number_today = 1 # Reset số lần build nếu ngày thay đổi
     end
-    
-    # Ghi lại số lần build mới vào file chỉ một lần
-    File.write(build_number_file, "#{current_date} #{build_number_today}")
- 
+
+    # Ghi lại số lần build mới vào cache của GitHub Actions
+    cache_put("build_number_cache", "#{current_date} #{build_number_today}")
+
+    # Cập nhật versionCode
     version_code = current_time.strftime("%y%m%d").to_i * 100 + build_number_today
     version_name = "1.0.0"
 
     # Cập nhật version trong pubspec.yaml
     pubspec_path = "../../pubspec.yaml"
     update_pubspec_file(pubspec_path, version_name, version_code)
- 
+
     # Cập nhật versionCode và versionName trong build.gradle
     gradle_file_path = "../app/build.gradle"
     update_gradle_file(gradle_file_path, version_code)
 
-    release_notes= "Release for version: #{version_name}+#{version_code}"
+    release_notes = "Release for version: #{version_name}+#{version_code}"
 
     # Build APK
     sh "flutter build apk --release"
@@ -70,6 +68,6 @@ platform :android do
       apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       groups: "testers",
       release_notes: release_notes
-      )
+    )
   end
 end
