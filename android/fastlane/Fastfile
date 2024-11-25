@@ -1,5 +1,14 @@
 default_platform(:android)
 
+# Hàm cập nhật build.gradle
+def update_gradle_file(file_path, version_code)
+  gradle_content = File.read(file_path)
+  gradle_content.gsub!(/versionCode\s+\d+/, "versionCode #{version_code}")
+  gradle_content.gsub!(/versionName\s+\".*\"/, "versionName \"#{Time.now.strftime('%Y.%m.%d')}\"")
+  File.write(file_path, gradle_content)
+end
+
+platform :android do
   # Lane để build và phân phối app
   lane :beta do
     # Lấy thời gian hiện tại
@@ -26,7 +35,7 @@ default_platform(:android)
     gradle_file_path = "android/app/build.gradle"
     update_gradle_file(gradle_file_path, version_code)
  
-    new_version_name = "#{current_time.strftime('%Y.%m.%d')} (Build #{build_number_today})"
+    new_version_name = "#{current_time.strftime("%Y.%m.%d")} (Build #{build_number_today})"
  
 
     # Build APK
@@ -41,12 +50,4 @@ default_platform(:android)
       release_notes: new_version_name
     )
   end
-end
-
-# Hàm cập nhật build.gradle
-def update_gradle_file(file_path, version_code)
-  gradle_content = File.read(file_path)
-  gradle_content.gsub!(/versionCode\s+\d+/, "versionCode #{version_code}")
-  gradle_content.gsub!(/versionName\s+\".*\"/, "versionName \"#{Time.now.strftime('%Y.%m.%d')}\"")
-  File.write(file_path, gradle_content)
 end
