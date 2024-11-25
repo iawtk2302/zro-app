@@ -45,7 +45,7 @@ platform :android do
     version_name = "Release for version code: #{version_code}"
 
     # Cập nhật version trong pubspec.yaml
-    pubspec_path = "pubspec.yaml"
+    pubspec_path = "../../pubspec.yaml"
     update_pubspec_file(pubspec_path, version_name, version_code)
  
     # Cập nhật versionCode và versionName trong build.gradle
