@@ -32,14 +32,6 @@ jobs:
         with:
           flutter-version: "3.24.4" # Hoặc phiên bản cụ thể của Flutter nếu cần
 
-      - name: Cache build number
-        uses: actions/cache@v2
-        with:
-          path: build_number.txt
-          key: ${{ runner.os }}-build-number-${{ hashFiles('build_number.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-build-number-
-
       # Step 5: Install dependencies
       - name: Install dependencies
         run: flutter pub get
@@ -64,9 +56,3 @@ jobs:
         env:
           FIREBASE_CREDENTIALS_JSON: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-
-      - name: Save build number file to cache
-        uses: actions/cache@v2
-        with:
-          path: build_number.txt
-          key: ${{ runner.os }}-build-number-${{ hashFiles('build_number.txt') }}
